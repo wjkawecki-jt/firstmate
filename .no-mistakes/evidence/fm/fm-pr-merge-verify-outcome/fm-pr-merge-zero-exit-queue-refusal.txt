@@ -1,0 +1,18 @@
+End-to-end executable evidence: bin/fm-pr-merge.sh with stubbed gh-axi/gh
+
+Scenario: gh-axi exits zero, but live GitHub state is OPEN, merged=false,
+isInMergeQueue=false; base branch is release/2026 and the paginated rules read
+reports merge_method=REBASE.
+
+--- end-user stderr ---
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+error: base branch release/2026 requires the merge queue; retry with: /Users/wjkawecki/.no-mistakes/worktrees/f22cd5749b0c/01M0WQNWN9V0M766G01330G4HW/bin/fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/56 -- --auto --rebase
+--- wrapper result ---
+exit=1 (expected non-zero)
+--- forge calls ---
+gh-axi: pr merge 56 --repo example/repo --squash
+gh rules read: api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=56 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+api --paginate repos/example/repo/rules/branches/release%2F2026 --jq .[] | select(.type == "merge_queue") | "merge_method=" + (.parameters.merge_method // "")
+--- durable state ---
+metadata pr line: <absent>
+poll: absent
