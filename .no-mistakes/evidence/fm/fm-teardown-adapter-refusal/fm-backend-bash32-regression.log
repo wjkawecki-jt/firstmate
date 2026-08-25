@@ -1,0 +1,5 @@
+shell: GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)
+baseline: rc=0 output=<empty>
+target: rc=0 output=REFUSED
+REACHED_CALLER
+n

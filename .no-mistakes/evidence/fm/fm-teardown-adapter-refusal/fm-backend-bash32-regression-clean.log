@@ -1,0 +1,16 @@
+shell: GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)
+baseline/tmux: rc=0 output=<empty>
+baseline/herdr: rc=0 output=<empty>
+baseline/zellij: rc=0 output=<empty>
+baseline/orca: rc=0 output=<empty>
+baseline/cmux: rc=0 output=<empty>
+target/tmux: rc=0 output=REFUSED
+REACHED_CALLER
+target/herdr: rc=0 output=REFUSED
+REACHED_CALLER
+target/zellij: rc=0 output=REFUSED
+REACHED_CALLER
+target/orca: rc=0 output=REFUSED
+REACHED_CALLER
+target/cmux: rc=0 output=REFUSED
+REACHED_CALLER
