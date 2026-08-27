@@ -1,0 +1,29 @@
+==============================================================
+ firstmate .env.local across teardown and pool reissue - PRE-FIX  (bin/fm-spawn.sh from base 4f89f5b)
+==============================================================
+fm-spawn.sh under test: /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-prefix-repo-sWhAoG/bin/fm-spawn.sh
+project (captain's primary checkout): /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-env-local-e2e-Bqxicc/project
+pooled slot: /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-env-local-e2e-Bqxicc/pool
+project .gitignore: .env.local
+captain's .env.local:      present  mode=640  uid=503 gid=20  byte-identical-to-captain-source=yes
+
+[0] pooled slot as the captain left it before teardown
+    slot .env.local:       present  mode=640  uid=503 gid=20  byte-identical-to-captain-source=yes
+
+[1] fm-spawn.sh task-alpha (task runs in the pooled slot)
+    exit status: 0
+    last line: spawned env-e2e-alpha harness=codex kind=ship mode=no-mistakes yolo=off window=firstmate:fm-env-e2e-alpha worktree=/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-env-local-e2e-Bqxicc/pool
+    slot .env.local:       present  mode=640  uid=503 gid=20  byte-identical-to-captain-source=yes
+
+[2] fm-teardown.sh env-e2e-alpha --force (slot returns to the pool)
+    exit status: 0
+    teardown env-e2e-alpha complete (window firstmate:fm-env-e2e-alpha, worktree /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-env-local-e2e-Bqxicc/pool)
+    slot .env.local:       ABSENT
+
+[3] fm-spawn.sh task-bravo (the pool reissues that same slot)
+    exit status: 0
+    last line: spawned env-e2e-bravo harness=codex kind=ship mode=no-mistakes yolo=off window=firstmate:fm-env-e2e-bravo worktree=/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-env-local-e2e-Bqxicc/pool
+    slot .env.local:       ABSENT
+    slot git status:       0 entries (0 = the slot is not wedged)
+
+VERDICT: the reissued worktree has NO usable .env.local - the reported failure.

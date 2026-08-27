@@ -1,0 +1,7 @@
+current tests/fm-spawn-pool-base-freshen.test.sh run against: /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-presweep-repo-gktgaM/bin/fm-spawn.sh
+spawn under test: spawn at 78c6659 (sweep still sat after the pre-refresh block; the target commit 4320c58 added the case below)
+
+rc=0  test_interrupted_seed_scratch_does_not_outlive_revocation
+        ok - an interrupted seed's staged scratch does not outlive the credential's revocation
+rc=1  test_scratch_is_swept_even_when_the_pre_refresh_phase_refuses
+        not ok - a staged credential scratch survived an acquisition that refused before the base refresh

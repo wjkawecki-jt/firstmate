@@ -1,0 +1,27 @@
+current tests/fm-spawn-pool-base-freshen.test.sh run against: /var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-prefix-repo-sWhAoG/bin/fm-spawn.sh
+spawn under test: pre-fix, base commit 4f89f5b (no .env.local ownership at all)
+
+rc=1  test_acquired_worktree_is_seeded_with_local_env_file
+        not ok - spawn did not seed .env.local in the acquired pool slot
+rc=1  test_acquired_worktree_refreshes_a_stale_local_env_file
+        not ok - spawn left a stale .env.local in the acquired pool slot
+rc=1  test_acquired_worktree_retires_a_local_env_file_the_captain_deleted
+        not ok - spawn left a revoked .env.local in the reissued pool slot
+rc=1  test_interrupted_local_env_seed_leaves_the_slot_acquirable
+        not ok - the fixture never reached the staged copy, so nothing was interrupted
+rc=1  test_interrupted_seed_scratch_does_not_outlive_revocation
+        not ok - the fixture never reached the staged copy, so nothing was interrupted
+rc=1  test_scratch_is_swept_even_when_the_pre_refresh_phase_refuses
+        not ok - the fixture never reached the staged copy, so nothing was interrupted
+rc=1  test_cross_filesystem_layout_degrades_to_a_loud_skip
+        not ok - spawn did not name the cross-filesystem layout as the cause (missing: 'on different filesystems')
+rc=1  test_unanswerable_filesystem_question_still_refuses
+        not ok - spawn accepted a filesystem state it could not establish
+rc=1  test_unignored_local_env_file_is_not_seeded
+        not ok - spawn did not explain why it skipped seeding an unignored .env.local (missing: 'because the project does not ignore it')
+rc=1  test_unignored_copy_matching_the_source_is_retired
+        not ok - spawn should retire its own unignored copy and continue: expected exit 0, got 1
+rc=1  test_unignored_copy_differing_from_the_source_is_kept
+        not ok - the refusal did not tell the operator how to clear the slot (missing: 'remove it by hand')
+rc=1  test_tracked_local_env_file_is_never_touched
+        not ok - spawn did not say it skipped .env.local because the project tracks it (plain) (missing: 'because the project tracks that file')
