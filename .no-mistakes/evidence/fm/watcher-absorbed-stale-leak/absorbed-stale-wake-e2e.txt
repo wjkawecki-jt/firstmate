@@ -1,0 +1,199 @@
+============================================================================
+firstmate - absorbed paused-task stale-wake leak: end-to-end evidence
+============================================================================
+Driver     : the real bin/fm-watch.sh polling loop, armed exactly as firstmate
+             arms it, against a hermetic tmux backend and a hermetic
+             fm-crew-state.sh. No Claude Stop hook and no
+             bin/fm-claude-stop-autoarm.sh participate in any run below, so
+             every durable wake-queue row that appears was enqueued by the
+             watcher polling loop itself.
+Producer   : bin/fm-watch.sh:790 surface_nonterminal_stale ->
+             fm_wake_append stale <window> "stale: <window>". It is the only
+             call site that can mint the BARE record, and it runs inside the
+             per-poll stale scan. bin/fm-claude-stop-autoarm.sh contains no
+             fm_wake_append call at all: it arms the watcher and translates the
+             watcher's stdout into a rewake, so it can only relay a record the
+             polling loop already enqueued.
+Subject    : window default:w12:p2 (task w12p2, kind ship, backend tmux) whose
+             worker declared its own external wait with a `paused:` status line
+             500s ago, while its tmux endpoint is still ALIVE.
+
+------------------------------------------------------------
+CASE: PRE-FIX reproduction (base 4f89f5b, bin/fm-watch.sh before the change)
+  watcher      : /Users/wjkawecki/.no-mistakes/worktrees/f22cd5749b0c/01M12KC45T7XDVT0ZF771C7C6K/bin/.fm-watch-prefix.sh
+  window       : default:w12:p2   (task w12p2, kind ship, backend tmux)
+  status log   : paused: waiting on the vendor's staging approval
+  declared     : 500s ago
+  endpoint     : tmux pane_current_command=grok -> agent ALIVE
+  crew state   : state: paused - source: status-log - at an external approval gate
+  producer     : bin/fm-watch.sh polling loop ONLY - no Claude Stop hook, no fm-claude-stop-autoarm.sh in this run
+------------------------------------------------------------
+
+--- harness footer tick 1: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 
+      durable wake-queue row(s) now pending:
+        1787869358	1	stale	default:w12:p2	stale: default:w12:p2
+      drained into a firstmate handling turn:
+        1787869358	1	stale	default:w12:p2	stale: default:w12:p2
+      watcher triage decision(s) for this window:
+  [pane unchanged, watcher re-armed]
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:23:11+0200] absorbed stale (paused, awaiting external, age 538s): default:w12:p2
+        [2026-08-28T00:23:13+0200] absorbed stale (paused, awaiting external, age 540s): default:w12:p2
+        [2026-08-28T00:23:15+0200] absorbed stale (paused, awaiting external, age 542s): default:w12:p2
+
+--- harness footer tick 2: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 
+      durable wake-queue row(s) now pending:
+        1787869402	2	stale	default:w12:p2	stale: default:w12:p2
+      drained into a firstmate handling turn:
+        1787869402	2	stale	default:w12:p2	stale: default:w12:p2
+      watcher triage decision(s) for this window:
+  [pane unchanged, watcher re-armed]
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:24:00+0200] absorbed stale (paused, awaiting external, age 586s): default:w12:p2
+        [2026-08-28T00:24:01+0200] absorbed stale (paused, awaiting external, age 588s): default:w12:p2
+        [2026-08-28T00:24:03+0200] absorbed stale (paused, awaiting external, age 590s): default:w12:p2
+
+--- harness footer tick 3: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 
+      durable wake-queue row(s) now pending:
+        1787869451	3	stale	default:w12:p2	stale: default:w12:p2
+      drained into a firstmate handling turn:
+        1787869451	3	stale	default:w12:p2	stale: default:w12:p2
+      watcher triage decision(s) for this window:
+  [pane unchanged, watcher re-armed]
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:24:44+0200] absorbed stale (paused, awaiting external, age 631s): default:w12:p2
+        [2026-08-28T00:24:46+0200] absorbed stale (paused, awaiting external, age 633s): default:w12:p2
+        [2026-08-28T00:24:47+0200] absorbed stale (paused, awaiting external, age 634s): default:w12:p2
+------------------------------------------------------------
+RESULT (PRE-FIX reproduction (base 4f89f5b, bin/fm-watch.sh before the change)): 3 harness footer ticks -> 3 bare "stale: default:w12:p2" wake(s) delivered to a firstmate handling turn
+------------------------------------------------------------
+
+------------------------------------------------------------
+CASE: POST-FIX (HEAD 9e34abd, bin/fm-watch.sh after the change)
+  watcher      : /Users/wjkawecki/.no-mistakes/worktrees/f22cd5749b0c/01M12KC45T7XDVT0ZF771C7C6K/bin/fm-watch.sh
+  window       : default:w12:p2   (task w12p2, kind ship, backend tmux)
+  status log   : paused: waiting on the vendor's staging approval
+  declared     : 500s ago
+  endpoint     : tmux pane_current_command=grok -> agent ALIVE
+  crew state   : state: paused - source: status-log - at an external approval gate
+  producer     : bin/fm-watch.sh polling loop ONLY - no Claude Stop hook, no fm-claude-stop-autoarm.sh in this run
+------------------------------------------------------------
+
+--- harness footer tick 1: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:25:20+0200] absorbed stale (paused, awaiting external, age 531s): default:w12:p2
+        [2026-08-28T00:25:22+0200] absorbed stale (paused, awaiting external, age 533s): default:w12:p2
+        [2026-08-28T00:25:23+0200] absorbed stale (paused, awaiting external, age 534s): default:w12:p2
+  [pane unchanged, watcher re-armed]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:25:58+0200] absorbed stale (paused, awaiting external, age 569s): default:w12:p2
+        [2026-08-28T00:26:00+0200] absorbed stale (paused, awaiting external, age 571s): default:w12:p2
+        [2026-08-28T00:26:01+0200] absorbed stale (paused, awaiting external, age 572s): default:w12:p2
+
+--- harness footer tick 2: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:26:35+0200] absorbed stale (paused, awaiting external, age 606s): default:w12:p2
+        [2026-08-28T00:26:37+0200] absorbed stale (paused, awaiting external, age 608s): default:w12:p2
+        [2026-08-28T00:26:38+0200] absorbed stale (paused, awaiting external, age 609s): default:w12:p2
+  [pane unchanged, watcher re-armed]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:27:10+0200] absorbed stale (paused, awaiting external, age 641s): default:w12:p2
+        [2026-08-28T00:27:12+0200] absorbed stale (paused, awaiting external, age 643s): default:w12:p2
+        [2026-08-28T00:27:13+0200] absorbed stale (paused, awaiting external, age 644s): default:w12:p2
+
+--- harness footer tick 3: pane repaints, then goes quiet again ---
+  [first sight of the new pane hash]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:27:48+0200] absorbed stale (paused, awaiting external, age 679s): default:w12:p2
+        [2026-08-28T00:27:50+0200] absorbed stale (paused, awaiting external, age 681s): default:w12:p2
+        [2026-08-28T00:27:51+0200] absorbed stale (paused, awaiting external, age 682s): default:w12:p2
+  [pane unchanged, watcher re-armed]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:28:25+0200] absorbed stale (paused, awaiting external, age 716s): default:w12:p2
+        [2026-08-28T00:28:27+0200] absorbed stale (paused, awaiting external, age 718s): default:w12:p2
+        [2026-08-28T00:28:28+0200] absorbed stale (paused, awaiting external, age 719s): default:w12:p2
+------------------------------------------------------------
+RESULT (POST-FIX (HEAD 9e34abd, bin/fm-watch.sh after the change)): 3 harness footer ticks -> 0 bare "stale: default:w12:p2" wake(s) delivered to a firstmate handling turn
+------------------------------------------------------------
+
+============================================================================
+Preserved behavior, all on the POST-FIX watcher
+============================================================================
+
+------------------------------------------------------------
+CASE: the declared external wait past its long recheck cadence must reach the captain
+  FM_PAUSE_RESURFACE_SECS=240, declaration is 500s old
+------------------------------------------------------------
+  WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 (paused 501s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds) 
+    durable wake-queue row(s) now pending:
+      1787869711	1	stale	default:w12:p2	stale: default:w12:p2 (paused 501s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds)
+    drained into a firstmate handling turn:
+      1787869711	1	stale	default:w12:p2	stale: default:w12:p2 (paused 501s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds)
+    watcher triage decision(s) for this window:
+
+------------------------------------------------------------
+CASE: a LIVE captain-held transfer keeps the stricter gate and must still surface at once
+  status log   : captain-held [key=route]: tracked by held-decision-route
+  endpoint     : tmux pane_current_command=grok -> agent ALIVE
+  crew state   : state: unknown - source: none - no current-state source available
+------------------------------------------------------------
+  WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 
+    durable wake-queue row(s) now pending:
+      1787869717	1	stale	default:w12:p2	stale: default:w12:p2
+    drained into a firstmate handling turn:
+      1787869717	1	stale	default:w12:p2	stale: default:w12:p2
+    watcher triage decision(s) for this window:
+
+------------------------------------------------------------
+CASE: the declared wait is lifted - a genuine stale must still wake firstmate
+  status log   : working: vendor approval received, resuming
+  crew state   : state: unknown - source: none - no current-state source available
+------------------------------------------------------------
+  WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 
+    durable wake-queue row(s) now pending:
+      1787869723	1	stale	default:w12:p2	stale: default:w12:p2
+    drained into a firstmate handling turn:
+      1787869723	1	stale	default:w12:p2	stale: default:w12:p2
+    watcher triage decision(s) for this window:
+
+------------------------------------------------------------
+CASE: a real wedge behind a provably-working crew must still wake firstmate
+  status log   : working: running the migration
+  crew state   : state: working - source: run-step - migration step is running
+------------------------------------------------------------
+  [first sight: absorbed as provably working, wedge timer starts]
+    watcher absorbed the poll, no wake, durable queue untouched (bare rows: 0)
+      watcher triage decision(s) for this window:
+        [2026-08-28T00:28:49+0200] absorbed non-terminal stale (provably working): default:w12:p2
+  [the pane stays frozen past FM_STALE_ESCALATE_SECS=240]
+    WATCHER STOOD DOWN (check: rearm-resurface ) - re-arming
+    WATCHER WOKE FIRSTMATE -> stale: default:w12:p2 (idle 502s, possible wedge, escalation 1) 
+      durable wake-queue row(s) now pending:
+        1787869762	1	stale	default:w12:p2	stale: default:w12:p2 (idle 502s, possible wedge, escalation 1)
+      drained into a firstmate handling turn:
+        1787869762	1	stale	default:w12:p2	stale: default:w12:p2 (idle 502s, possible wedge, escalation 1)
+      watcher triage decision(s) for this window:

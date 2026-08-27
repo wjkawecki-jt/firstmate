@@ -1,0 +1,21 @@
+Targeted automated coverage for the absorbed paused-task stale-wake leak
+Suite: tests/fm-watch-triage.test.sh (18 pause / stale / wedge / secondmate / away-mode cases)
+
+ok - stale_is_terminal: terminal status surfaces, non-terminal and no-status are benign
+ok - provably-working non-terminal stale is absorbed on first sight, then wedge-escalated past the threshold
+ok - consecutive wedge escalations on the same pane accumulate and demand deep inspection at the threshold
+ok - a pane becoming active again resets the consecutive wedge-escalation counter
+ok - a busy pane under a declared pause is rechecked on the long cadence, and lifting the pause restores the wedge escalation
+ok - away mode hands a busy declared pause to the daemon as a plain stale, and lifting the declaration restores the wedge escalation
+ok - away mode wakes the daemon once per declaration for a busy pane whose footer ticks on every capture
+ok - a not-provably-working non-terminal stale is surfaced immediately (never left to wait out the timer)
+ok - a declared pause is absorbed on first sight, then re-surfaced as a recheck past the threshold, never wedge-escalated
+ok - declared waits use the bounded cadence for live or exited endpoints and across a churning pane hash, a live captain hold surfaces once then falls back to that cadence, and lifting the pause restores genuine stale delivery
+ok - a declared paused secondmate re-surfaces on the bounded normal-mode cadence
+ok - a captain-held secondmate re-surfaces on the bounded normal-mode cadence
+ok - a non-paused secondmate retains normal stale suppression
+ok - a resumed secondmate clears pause and stale tracking before stale exemption
+ok - unchanged stale hashes reclassify when a crew enters or leaves pause
+ok - a declared pause is periodically rechecked against authoritative active-run state
+ok - a paused status overridden by authoritative working preserves its wedge timer and escalates
+ok - AFK changed paused panes hand off plain stale identities for daemon-owned pause triage

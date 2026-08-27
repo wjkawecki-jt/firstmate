@@ -1,0 +1,11 @@
+============================================================================
+Regression gate: the new coverage must FAIL before the fix and PASS after it
+============================================================================
+Test    : tests/fm-watch-triage.test.sh :: test_declared_waits_use_bounded_cadence_until_released
+Runner  : the suite file with only that one test invoked (all other test bodies untouched)
+
+--- bin/fm-watch.sh reverted to the base commit 4f89f5b (fix removed, tests kept) ---
+not ok - live declared external wait produced a bare stale wake: stale: test:fm-gate
+
+--- bin/fm-watch.sh at HEAD 9e34abd (fix applied) ---
+ok - declared waits use the bounded cadence for live or exited endpoints and across a churning pane hash, a live captain hold surfaces once then falls back to that cadence, and lifting the pause restores genuine stale delivery
