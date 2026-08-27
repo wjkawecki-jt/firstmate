@@ -1,0 +1,58 @@
+==============================================================
+bin/fm-pr-merge.sh outcome surface - 9e4e130
+==============================================================
+
+── 1. a merge that really lands is reported as merged
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321
+verified: https://github.com/acme/widgets/pull/4321 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+[exit status: 0]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-merge-notified task-x1.pr-poll-registration ]
+
+── 2. gh is not installed at all - the gh-axi merge still runs and still proves the merge
+$ PATH without gh; fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321
+[gh resolvable on this PATH: no]
+verified: https://github.com/acme/widgets/pull/4321 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+[exit status: 0]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-merge-notified task-x1.pr-poll-registration ]
+
+── 3. auto-merge armed on a base branch with no merge queue - refused, not a silent success
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 -- --auto --squash
+error: the merge command's own output follows, quoted; it is the forge CLI's report, not this script's verdict:
+error: > merged:
+error: >   number: 4321
+error: >   status: ok
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+error: auto-merge was requested and armed for https://github.com/acme/widgets/pull/4321, but nothing is merged or in the merge queue yet, so this run refuses instead of reporting an unproved merge
+[exit status: 1]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-registration ]
+
+── 4. both outcome reads fail after a merge command that returned success
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321
+error: could not read the GitHub pull request outcome after the merge attempt: the gh read failed and the gh-axi view could not prove the outcome either; PR metadata and merge poll remain recorded
+error: the merge command's own output follows, quoted; it is the forge CLI's report, not this script's verdict:
+error: > merged:
+error: >   number: 4321
+error: >   status: ok
+[exit status: 1]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-registration ]
+
+── 5. the merge command itself failed - its own error first, no claim of acceptance
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 -- --auto --merge
+error: failed to run git: exit status 128
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+error: auto-merge was requested for https://github.com/acme/widgets/pull/4321, but the merge command itself failed, so nothing was enabled, merged or queued
+error: base branch main requires the merge queue; retry with: /Users/wjkawecki/.no-mistakes/worktrees/f22cd5749b0c/01M11GF4FEF2972TM2RV6RD658/bin/fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 -- --auto --merge
+[exit status: 1]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-registration ]
+
+── 6. the caller already used the queue's own flags and it still has not queued
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 -- --auto --merge
+error: the merge command's own output follows, quoted; it is the forge CLI's report, not this script's verdict:
+error: > merged:
+error: >   number: 4321
+error: >   status: ok
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+error: auto-merge was requested and armed for https://github.com/acme/widgets/pull/4321, but nothing is merged or in the merge queue yet, so this run refuses instead of reporting an unproved merge
+error: this run refuses even though the request for https://github.com/acme/widgets/pull/4321 was accepted with the exact flags base branch main requires (--auto --merge): the pull request has still not entered the merge queue, so no landed or queued outcome is proven; re-check the pull request's merge queue state before retrying
+[exit status: 1]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 | merge poll: task-x1.pr-poll task-x1.pr-poll-registration ]

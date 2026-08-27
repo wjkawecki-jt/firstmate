@@ -1,0 +1,29 @@
+==============================================================
+BEFORE the fix - base commit 10b93b2 (bin/fm-pr-merge.sh as shipped)
+==============================================================
+
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+armed: state/task-x1.check.sh
+merged:
+  number: 4321
+  status: ok
+[exit status: 0]
+[live pull request: state=OPEN merged=false queued=false base=main ]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 pr_head=1111111111111111111111111111111111111111 ]
+[merge poll armed: 2 file(s) task-x1.pr-poll task-x1.pr-poll-registration ]
+
+$ fm-pr-merge.sh task-x1 https://github.com/acme/widgets/pull/4321 -- --auto --merge
+WARNING: watcher still down (same stale episode; last beat: never, grace 300s) - full banner already printed this episode.
+armed: state/task-x1.check.sh
+✓ Pull request acme/widgets#4321 will be added to the merge queue when all requirements are met
+[exit status: 0]
+[live pull request: state=OPEN merged=false queued=true base=main ]
+[task meta: pr=https://github.com/acme/widgets/pull/4321 pr_head=1111111111111111111111111111111111111111 ]
+[merge poll armed: 2 file(s) task-x1.pr-poll task-x1.pr-poll-registration ]
