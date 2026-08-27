@@ -1,0 +1,39 @@
+### firstmate watcher - parked task in a declared external wait (endpoint ALIVE, harness footer ticking)
+### build: before-fix
+
+--- default:w12:p2 : 4 watcher ticks, footer advances each tick (new pane hash every time)
+  tick 1 (footer advanced -> new pane hash)
+     durable queue row : stale: default:w12:p2
+     next poll, same hash, watcher decision : [2026-08-27T10:41:41+0200] absorbed stale (paused, awaiting external, age 3s): default:w12:p2
+  tick 2 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:41+0200] absorbed stale (paused, awaiting external, age 3s): default:w12:p2
+  tick 3 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:41+0200] absorbed stale (paused, awaiting external, age 3s): default:w12:p2
+  tick 4 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:41+0200] absorbed stale (paused, awaiting external, age 3s): default:w12:p2
+  => handling turns firstmate burned on this unchanged parked task: 1 of 4 ticks
+  => durable stale rows still queued for default:w12:p2: 0 (bare 'stale: default:w12:p2': 0)
+  => what firstmate's next handling turn receives (bin/fm-wake-drain.sh):
+       | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 0 --recovery-generation 71295.1787820106.D6P0z1
+
+--- default:w15:p2 : 4 watcher ticks, footer advances each tick (new pane hash every time)
+  tick 1 (footer advanced -> new pane hash)
+     durable queue row : stale: default:w15:p2
+     next poll, same hash, watcher decision : [2026-08-27T10:41:49+0200] absorbed stale (paused, awaiting external, age 3s): default:w15:p2
+  tick 2 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:49+0200] absorbed stale (paused, awaiting external, age 3s): default:w15:p2
+  tick 3 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:49+0200] absorbed stale (paused, awaiting external, age 3s): default:w15:p2
+  tick 4 (footer advanced -> new pane hash)
+     durable queue row : <nothing queued - no handling turn burned>
+     next poll, same hash, watcher decision : [2026-08-27T10:41:49+0200] absorbed stale (paused, awaiting external, age 3s): default:w15:p2
+  => handling turns firstmate burned on this unchanged parked task: 1 of 4 ticks
+  => durable stale rows still queued for default:w15:p2: 0 (bare 'stale: default:w15:p2': 0)
+  => what firstmate's next handling turn receives (bin/fm-wake-drain.sh):
+       | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 0 --recovery-generation 78084.1787820114.HZ5zPO
+

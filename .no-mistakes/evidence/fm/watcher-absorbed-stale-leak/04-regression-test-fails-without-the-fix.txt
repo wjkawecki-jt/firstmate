@@ -1,0 +1,14 @@
+### tests/fm-watch-triage.test.sh :: test_declared_waits_use_bounded_cadence_until_released
+
+# with bin/fm-watch.sh reverted to the base commit (10b93b2), fix removed, test unchanged:
+$ git show 10b93b2:bin/fm-watch.sh > bin/fm-watch.sh
+$ bash <single-test runner for test_declared_waits_use_bounded_cadence_until_released>
+not ok - live declared external wait produced a bare stale wake: stale: test:fm-gate
+
+# with the fix restored (128c8fd):
+$ bash <same single-test runner>
+ok - declared waits use the bounded cadence for live or exited endpoints, a live captain hold still surfaces at once, and lifting the pause restores genuine stale delivery
+
+# whole file, fixed build:
+$ bash tests/fm-watch-triage.test.sh
+62 ok, 0 not ok

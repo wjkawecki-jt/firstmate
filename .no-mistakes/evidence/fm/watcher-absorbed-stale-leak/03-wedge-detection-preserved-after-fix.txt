@@ -1,0 +1,28 @@
+### wedge-preservation check on the FIXED watcher: what must still reach firstmate
+
+--- 1. declared external wait, LIVE endpoint, past the long recheck cadence
+    (the wait must not rot invisibly: it still has to reach the captain)
+    firstmate's handling turn (bin/fm-wake-drain.sh):
+      | 1787820199	1	stale	default:w16:p2	stale: default:w16:p2 (paused 501s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds)
+      | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 1 --recovery-generation 96077.1787820199.LL4des
+      | WARNING: queued wakes pending - drain them with bin/fm-wake-drain.sh before anything else.
+
+--- 2. the SAME idle pane after the declaration is lifted
+    (a task NOT in a declared external wait is unchanged: genuine stale delivered at once)
+    firstmate's handling turn (bin/fm-wake-drain.sh):
+      | 1787820202	2	stale	default:w16:p2	stale: default:w16:p2
+      | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 2 --recovery-generation 98681.1787820202.i6JltU
+      | WARNING: queued wakes pending - drain them with bin/fm-wake-drain.sh before anything else.
+
+--- 3. a genuinely wedged pane: quiet, provably-working run, no declaration, past the wedge threshold
+    (a wedge that stops being reported would be worse than the bug being fixed)
+    firstmate's handling turn (bin/fm-wake-drain.sh):
+      | 1787820204	1	stale	default:w17:p2	stale: default:w17:p2 (idle 501s, possible wedge, escalation 1)
+      | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 1 --recovery-generation 1829.1787820204.e1e3sq
+      | WARNING: queued wakes pending - drain them with bin/fm-wake-drain.sh before anything else.
+
+--- 4. a LIVE captain-held decision gate (the deliberate carve-out that keeps the stricter gate)
+    firstmate's handling turn (bin/fm-wake-drain.sh):
+      | 1787820206	1	stale	default:w18:p2	stale: default:w18:p2
+      | WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 1 --recovery-generation 3243.1787820206.LjsICi
+      | WARNING: queued wakes pending - drain them with bin/fm-wake-drain.sh before anything else.
