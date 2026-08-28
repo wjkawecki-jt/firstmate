@@ -1,0 +1,26 @@
+ok - a stale pooled worktree refreshes to current origin/main before a crew branch is created
+ok - a stale pooled worktree resolves and refreshes a non-main default branch
+ok - direct-PR ships and scouts both refresh stale pooled worktrees before launch
+ok - a dirty pooled worktree is refused without discarding its local work
+ok - an unresolved remote default branch refuses the pooled worktree
+ok - an unreachable origin refuses a potentially stale pooled worktree
+ok - an acquired pooled worktree receives the primary checkout's local environment file
+ok - an acquired pooled worktree's stale local environment file is refreshed from the primary checkout
+ok - a local environment file deleted from the primary checkout does not survive in a reissued slot
+ok - an interrupted local environment seed leaves the pool slot clean and acquirable
+ok - an interrupted seed's staged scratch does not outlive the credential's revocation
+ok - a staged scratch is swept even when the acquisition refuses before the base refresh
+ok - a cross-filesystem layout spawns and warns instead of blocking the task
+ok - an unestablished filesystem state refuses instead of degrading like a cross-filesystem one
+ok - an unignored local environment file is never seeded and the skip is explained
+ok - an unignored copy identical to the current source is retired so the slot stays usable
+ok - an unignored copy that differs from the source is preserved and the refusal is actionable
+ok - teardown hands back a slot whose task dropped the local environment file's ignore rule
+ok - teardown still refuses a local environment file the task itself authored
+ok - a tracked .env.local is neither seeded over nor retired, and the slot stays clean
+ok - two consecutive spawns across a moved submodule pin end in a refusal naming both pins and no remedy
+ok - an unpushed submodule commit keeps the uncommitted-work refusal and survives it
+ok - work inside a submodule is still refused as uncommitted work, not called stale
+ok - a stale pin carrying real work is refused conservatively, never called stale
+ok - a stale pin beside other dirt yields the conservative refusal alone, with no stale-pin line
+# all fm-spawn-pool-base-freshen tests passed
