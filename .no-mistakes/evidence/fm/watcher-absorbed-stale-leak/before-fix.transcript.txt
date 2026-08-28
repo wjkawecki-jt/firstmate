@@ -1,0 +1,41 @@
+=== before-fix: live grok endpoint under a declared external wait, footer ticking ===
+watcher under test : /tmp/fm-prefix/bin/fm-watch.sh
+window             : default:w17:p2   (kind=ship, harness=grok, backend=tmux)
+status log         : paused: awaiting the upstream tool release to land
+crew state read    : state: paused - source: status-log - awaiting the upstream tool release
+endpoint liveness  : tmux pane_current_command=grok  (agent ALIVE)
+
+--- harness footer tick 1 (new pane hash) ---
+  WATCHER EXITED -> firstmate handling turn #1: stale: default:w17:p2
+    durable queue row: seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+--- harness footer tick 2 (new pane hash) ---
+  WATCHER EXITED -> firstmate handling turn #2: stale: default:w17:p2
+    durable queue row: seq=2 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+--- harness footer tick 3 (new pane hash) ---
+  WATCHER EXITED -> firstmate handling turn #3: stale: default:w17:p2
+    durable queue row: seq=3 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+--- harness footer tick 4 (new pane hash) ---
+  WATCHER EXITED -> firstmate handling turn #4: stale: default:w17:p2
+    durable queue row: seq=4 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+
+--- every durable wake record this run enqueued for default:w17:p2 ---
+  durable queue row: seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+  durable queue row: seq=2 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+  durable queue row: seq=3 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+  durable queue row: seq=4 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+
+--- watcher triage log (/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-repro-before-fix.4nvS0f/before-fix/state/.watch-triage.log) ---
+  [2026-08-28T03:02:31+0200] absorbed stale (paused, awaiting external, age 451s): default:w17:p2
+  [2026-08-28T03:02:39+0200] absorbed stale (paused, awaiting external, age 459s): default:w17:p2
+  [2026-08-28T03:02:41+0200] absorbed stale (paused, awaiting external, age 461s): default:w17:p2
+  [2026-08-28T03:02:43+0200] absorbed stale (paused, awaiting external, age 463s): default:w17:p2
+  [2026-08-28T03:02:44+0200] absorbed stale (paused, awaiting external, age 464s): default:w17:p2
+  [2026-08-28T03:02:46+0200] absorbed stale (paused, awaiting external, age 466s): default:w17:p2
+  [2026-08-28T03:02:48+0200] absorbed stale (paused, awaiting external, age 468s): default:w17:p2
+  [2026-08-28T03:02:56+0200] absorbed stale (paused, awaiting external, age 476s): default:w17:p2
+  [2026-08-28T03:02:58+0200] absorbed stale (paused, awaiting external, age 478s): default:w17:p2
+  [2026-08-28T03:02:59+0200] absorbed stale (paused, awaiting external, age 479s): default:w17:p2
+  [2026-08-28T03:03:01+0200] absorbed stale (paused, awaiting external, age 481s): default:w17:p2
+  [2026-08-28T03:03:03+0200] absorbed stale (paused, awaiting external, age 483s): default:w17:p2
+
+RESULT: firstmate handling turns burned = 4 ; bare 'stale: default:w17:p2' durable records = 4

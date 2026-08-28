@@ -1,0 +1,4 @@
+    durable queue row: seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+    durable queue row: seq=2 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+    durable queue row: seq=3 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+    durable queue row: seq=4 kind=stale key=default:w17:p2 payload=stale: default:w17:p2

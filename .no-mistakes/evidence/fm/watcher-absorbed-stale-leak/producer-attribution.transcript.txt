@@ -1,0 +1,19 @@
+=== which producer enqueued the bare durable record? ===
+processes started in this run : bin/fm-watch.sh only (no Stop hook, no daemon)
+watcher wake reason printed   : stale: default:w17:p2
+
+--- xtrace frames around the durable append (file:line:function) ---
+  1575:+ fm-watch.sh:764:surface_nonterminal_stale> fm_wake_append stale default:w17:p2 'stale: default:w17:p2'
+
+--- the enclosing watcher frame that produced it ---
+  + fm-watch.sh:771:surface_nonterminal_stale> :
+  + fm-watch.sh:772:surface_nonterminal_stale> date +%s
+  + fm-watch.sh:773:surface_nonterminal_stale> date +%s
+  + fm-watch.sh:777:surface_nonterminal_stale> wake 'stale: default:w17:p2'
+
+--- durable queue after that append ---
+  seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2
+
+--- the Stop-owned rewake translation never appends a wake record ---
+  grep -c 'fm_wake_append' bin/fm-claude-stop-autoarm.sh = 0
+  it only arms the watcher and turns the watcher's exit into a rewake banner

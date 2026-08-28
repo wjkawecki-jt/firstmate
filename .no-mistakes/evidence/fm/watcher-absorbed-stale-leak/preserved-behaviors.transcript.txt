@@ -1,0 +1,19 @@
+watcher under test : /Users/wjkawecki/.no-mistakes/worktrees/f22cd5749b0c/01M12X3Z31H3CJAKCERMKDJRK0/bin/fm-watch.sh
+
+=== B. declared external wait, LIVE grok endpoint, wait older than the recheck cadence ===
+status log         : paused: awaiting the upstream tool release to land   (declared 600s ago)
+FM_PAUSE_RESURFACE_SECS=240  -> the bounded recheck is due
+  WATCHER WOKE FIRSTMATE: stale: default:w17:p2 (paused 601s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds)
+  durable queue row: seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2 (paused 601s, awaiting external - declared pause, rechecked on a long cadence not a wedge; confirm the wait still holds)
+
+=== C. genuine wedge: no declaration, pane frozen past FM_STALE_ESCALATE_SECS=240 ===
+status log         : working: still compiling the release bundle   (no paused:/captain-held: declaration)
+idle timer         : 500s on a static pane
+  WATCHER WOKE FIRSTMATE: stale: default:w21:p2 (idle 501s, possible wedge, escalation 1)
+  durable queue row: seq=1 kind=stale key=default:w21:p2 payload=stale: default:w21:p2 (idle 501s, possible wedge, escalation 1)
+
+=== D. same window with the declaration LIFTED (never in a declared wait) ===
+status log         : working: external wait cleared, but the pane made no progress
+crew state read    : state: unknown - source: none - no current-state source available
+  WATCHER WOKE FIRSTMATE: stale: default:w17:p2
+  durable queue row: seq=1 kind=stale key=default:w17:p2 payload=stale: default:w17:p2

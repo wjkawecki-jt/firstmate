@@ -1,0 +1,3 @@
+37:ok - declared waits use the bounded cadence for live or exited endpoints and across a churning pane hash, a live captain hold surfaces once then falls back to that cadence, and lifting the pause restores genuine stale delivery
+
+62 ok, 0 not ok - tests/fm-watch-triage.test.sh run against the branch bin/fm-watch.sh (exit code 0)
