@@ -1,0 +1,38 @@
+# observed spawn: spawned pool-current-base-r1 harness=codex kind=ship mode=no-mistakes yolo=off window=firstmate:fm-pool-current-base-r1 worktree=/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/current-base/pool
+# observed base: HEAD=372b078bd6aed274e5efa524419c652e02ffc0e2 origin/main=372b078bd6aed274e5efa524419c652e02ffc0e2 advanced-main=must survive a newly spawned branch
+ok - a stale pooled worktree refreshes to current origin/main before a crew branch is created
+ok - a stale pooled worktree resolves and refreshes a non-main default branch
+# observed direct-pr spawn: spawned pool-direct-pr-r3 harness=codex kind=ship mode=direct-PR yolo=off window=firstmate:fm-pool-direct-pr-r3 worktree=/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/direct-pr/pool
+# observed scout spawn: spawned pool-scout-r3 harness=codex kind=scout window=firstmate:fm-pool-scout-r3 worktree=/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/scout/pool
+ok - direct-PR ships and scouts both refresh stale pooled worktrees before launch
+# observed dirty refusal: error: pooled worktree '/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/dirty-refusal/pool' is not clean; refusing to discard uncommitted work while refreshing its base; preserved=keep this local work
+ok - a dirty pooled worktree is refused without discarding its local work
+# observed unresolved-default refusal: error: could not resolve origin's current default branch for pooled worktree '/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/unresolved-default/pool'; refusing to launch from a potentially stale base
+ok - an unresolved remote default branch refuses the pooled worktree
+# observed unreachable-origin refusal: error: could not fetch origin for pooled worktree '/var/folders/4h/96rnpzn57r1146sj23ddd6h40000gq/T//fm-spawn-pool-base-freshen.qKxTcm/unreachable-origin/pool'; refusing to launch from a potentially stale base
+ok - an unreachable origin refuses a potentially stale pooled worktree
+ok - an acquired pooled worktree receives the primary checkout's local environment file
+ok - an acquired pooled worktree's stale local environment file is refreshed from the primary checkout
+ok - a local environment file deleted from the primary checkout does not survive in a reissued slot
+ok - an interrupted local environment seed leaves the pool slot clean and acquirable
+ok - an interrupted seed's staged scratch does not outlive the credential's revocation
+ok - a staged scratch is swept even when the acquisition refuses before the base refresh
+ok - a cross-filesystem layout spawns and warns instead of blocking the task
+ok - an unestablished filesystem state refuses instead of degrading like a cross-filesystem one
+ok - an unignored local environment file is never seeded and the skip is explained
+ok - an unignored copy this seeding recorded writing is retired so the slot stays usable
+ok - an unignored copy matching the source is still kept when nothing recorded seeding it
+ok - a seeded copy the task rewrote is kept, because the record names one exact file
+ok - an unignored copy that differs from the source is preserved and the refusal is actionable
+ok - teardown hands back a slot whose task dropped the local environment file's ignore rule
+ok - teardown still refuses a local environment file the task itself authored
+ok - teardown refuses a task-authored local environment file even when it matches the source
+ok - a refused teardown leaves firstmate's own seeded copy in place
+ok - a tracked .env.local is neither seeded over nor retired, and the slot stays clean
+# observed stale-pin refusal: error: submodule 'ui' is checked out at 7064400fdc685d99db40cd85492d5853e4da850f, but this base records b647fea0728433807f1a1f8d7ffe0ba30ee22bc5
+ok - two consecutive spawns across a moved submodule pin end in a refusal naming both pins and no remedy
+ok - an unpushed submodule commit keeps the uncommitted-work refusal and survives it
+ok - work inside a submodule is still refused as uncommitted work, not called stale
+ok - a stale pin carrying real work is refused conservatively, never called stale
+ok - a stale pin beside other dirt yields the conservative refusal alone, with no stale-pin line
+# all fm-spawn-pool-base-freshen tests passed
