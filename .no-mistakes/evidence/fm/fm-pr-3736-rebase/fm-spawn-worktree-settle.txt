@@ -1,0 +1,41 @@
+ok - a single transient stale pane_current_path read is not accepted as the worktree
+ok - an already-settled pane confirms on the next read, not a whole extra cycle
+ok - a transient primary-checkout pane read is not accepted as the worktree
+ok - a pane stuck on the primary checkout fails loudly at the deadline
+Note: switching to 'b9c8db7931342d412bcceca06cb13e376537425d'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+ok - a linked secondmate home scopes Treehouse get to its own project pool and passes Claude trust
+Note: switching to 'b9c8db7931342d412bcceca06cb13e376537425d'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+ok - a secondmate home refuses to acquire a worktree when treehouse cannot scope the pool to it
+# all fm-spawn-worktree-settle tests passed
