@@ -1,0 +1,3 @@
+ok - fm_backend_source: a missing or unreadable adapter refuses without aborting the caller
+ok - fm_backend_source: nested source failure refuses even after later adapter commands
+ok - fm_backend_source refusal probe ran under 3.2.57(1)-release
